@@ -1,1 +1,0 @@
-/Users/kntrllr/folder/coding/adventofcode2023/day01/target/debug/part_one: /Users/kntrllr/folder/coding/adventofcode2023/day01/src/bin/input.txt /Users/kntrllr/folder/coding/adventofcode2023/day01/src/bin/part_one.rs
