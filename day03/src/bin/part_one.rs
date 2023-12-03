@@ -10,7 +10,7 @@ struct Point {
 }
 
 impl Point {
-    fn is_adjacent(&self, points: &Vec<Point>) -> bool {
+    fn is_adjacent(&self, points: &[Point]) -> bool {
         for dx in -1..=1 {
             for dy in -1..=1 {
                 if points.contains(&Point {
@@ -40,7 +40,7 @@ impl Number {
     }
 }
 
-fn parse_symbols(schematic: &Vec<&str>) -> Vec<Point> {
+fn parse_symbols(schematic: &[&str]) -> Vec<Point> {
     let mut symbols = Vec::new();
 
     for (x, &row) in schematic.iter().enumerate() {
@@ -57,7 +57,7 @@ fn parse_symbols(schematic: &Vec<&str>) -> Vec<Point> {
     symbols
 }
 
-fn parse_numbers(schematic: &Vec<&str>) -> Vec<Number> {
+fn parse_numbers(schematic: &[&str]) -> Vec<Number> {
     let mut numbers = Vec::new();
 
     let mut current_value = String::new();

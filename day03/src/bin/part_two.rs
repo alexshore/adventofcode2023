@@ -10,7 +10,7 @@ struct Point {
 }
 
 impl Point {
-    fn is_adjacent(&self, points: &Vec<Point>) -> bool {
+    fn is_adjacent(&self, points: &[Point]) -> bool {
         for dx in -1..=1 {
             for dy in -1..=1 {
                 if points.contains(&Point {
@@ -40,7 +40,7 @@ impl Number {
     }
 }
 
-fn parse_symbols(schematic: &Vec<&str>) -> Vec<Point> {
+fn parse_symbols(schematic: &[&str]) -> Vec<Point> {
     let mut symbols = Vec::new();
 
     for (x, &row) in schematic.iter().enumerate() {
@@ -57,7 +57,7 @@ fn parse_symbols(schematic: &Vec<&str>) -> Vec<Point> {
     symbols
 }
 
-fn parse_numbers(schematic: &Vec<&str>) -> Vec<Number> {
+fn parse_numbers(schematic: &[&str]) -> Vec<Number> {
     let mut numbers = Vec::new();
 
     let mut current_value = String::new();
@@ -92,29 +92,22 @@ fn parse_numbers(schematic: &Vec<&str>) -> Vec<Number> {
 
 fn part_two(input: &str) -> u32 {
     let schematic: Vec<&str> = input.split('\n').collect();
-    let mut total = 0;
+    let mut total: u32 = 0;
 
     let numbers = parse_numbers(&schematic);
     let symbols = parse_symbols(&schematic);
 
-    'outer: for symbol in symbols {
-        let mut num1: Option<u32> = None;
-        let mut num2: Option<u32> = None;
+    for symbol in symbols {
+        let mut adjacent = Vec::new();
 
         for number in numbers.iter() {
             if symbol.is_adjacent(&number.locs) {
-                if num1.is_none() {
-                    num1 = Some(number.value);
-                } else if num2.is_none() {
-                    num2 = Some(number.value);
-                } else {
-                    continue 'outer;
-                }
+                adjacent.push(number.value)
             }
         }
 
-        if num1.is_some() && num2.is_some() {
-            total += num1.unwrap() * num2.unwrap()
+        if adjacent.len() == 2 {
+            total += adjacent.iter().sum::<u32>()
         }
     }
 

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn main() {
     let input = include_str!("input.txt").trim_end();
     let _output = dbg!(part_one(input));
@@ -9,12 +11,11 @@ const MAX_RED: u32 = 12;
 const MAX_GREEN: u32 = 13;
 const MAX_BLUE: u32 = 14;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Colour {
-    BLUE,
-    RED,
-    GREEN,
-    NONE,
+    Blue,
+    Red,
+    Green,
 }
 
 #[derive(Debug)]
@@ -25,15 +26,17 @@ struct Cube {
 
 impl Cube {
     fn parse(cube: String) -> Self {
-        let split_data: Vec<&str> = cube.split(" ").collect();
+        let split_data: Vec<&str> = cube.split(' ').collect();
+
+        let colour_map = HashMap::from([
+            ("blue", Colour::Blue),
+            ("red", Colour::Red),
+            ("green", Colour::Green),
+        ]);
+
         Cube {
             quantity: split_data.first().unwrap().parse::<u32>().unwrap(),
-            colour: match *split_data.last().unwrap() {
-                "blue" => Colour::BLUE,
-                "red" => Colour::RED,
-                "green" => Colour::GREEN,
-                _ => Colour::NONE,
-            },
+            colour: colour_map[split_data.last().unwrap()],
         }
     }
 }
@@ -73,15 +76,15 @@ impl Game {
     fn is_in_bounds(&self) -> bool {
         for set in self.sets.iter() {
             for cube in set.cubes.iter() {
-                if cube.colour == Colour::RED && cube.quantity > MAX_RED {
+                if cube.colour == Colour::Red && cube.quantity > MAX_RED {
                     return false;
                 }
 
-                if cube.colour == Colour::GREEN && cube.quantity > MAX_GREEN {
+                if cube.colour == Colour::Green && cube.quantity > MAX_GREEN {
                     return false;
                 }
 
-                if cube.colour == Colour::BLUE && cube.quantity > MAX_BLUE {
+                if cube.colour == Colour::Blue && cube.quantity > MAX_BLUE {
                     return false;
                 }
             }

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn main() {
     let input = include_str!("input.txt").trim_end();
     let _output = dbg!(part_two(input));
@@ -5,12 +7,11 @@ fn main() {
 
 // code :3
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Colour {
-    BLUE,
-    RED,
-    GREEN,
-    NONE,
+    Blue,
+    Red,
+    Green,
 }
 
 #[derive(Debug)]
@@ -21,15 +22,17 @@ struct Cube {
 
 impl Cube {
     fn parse(cube: String) -> Self {
-        let split_data: Vec<&str> = cube.split(" ").collect();
+        let split_data: Vec<&str> = cube.split(' ').collect();
+
+        let colour_map = HashMap::from([
+            ("blue", Colour::Blue),
+            ("red", Colour::Red),
+            ("green", Colour::Green),
+        ]);
+
         Cube {
             quantity: split_data.first().unwrap().parse::<u32>().unwrap(),
-            colour: match *split_data.last().unwrap() {
-                "blue" => Colour::BLUE,
-                "red" => Colour::RED,
-                "green" => Colour::GREEN,
-                _ => Colour::NONE,
-            },
+            colour: colour_map[split_data.last().unwrap()],
         }
     }
 }
@@ -75,15 +78,15 @@ impl Game {
                 match *cube {
                     Cube {
                         quantity,
-                        colour: Colour::RED,
+                        colour: Colour::Red,
                     } if quantity > min_red => min_red = quantity,
                     Cube {
                         quantity,
-                        colour: Colour::GREEN,
+                        colour: Colour::Green,
                     } if quantity > min_green => min_green = quantity,
                     Cube {
                         quantity,
-                        colour: Colour::BLUE,
+                        colour: Colour::Blue,
                     } if quantity > min_blue => min_blue = quantity,
                     _ => (),
                 }
