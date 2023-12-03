@@ -1,5 +1,5 @@
 fn main() {
-    let input = include_str!("input.txt");
+    let input = include_str!("input.txt").trim_end();
     let _output = dbg!(part_one(input));
 }
 
