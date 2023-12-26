@@ -46,7 +46,7 @@ fn calculate_hash(label: &str) -> usize {
     hash
 }
 
-fn do_step(step: &str, boxes: &mut Vec<Box>) {
+fn do_step(step: &str, boxes: &mut [Box]) {
     let (label, focal_length) = step.split_once(['-', '=']).unwrap();
     let action = step.chars().find(|c| !c.is_alphanumeric()).unwrap();
 

@@ -41,8 +41,7 @@ fn part_two(input: &str) -> u64 {
 
     let start_nodes = routes
         .keys()
-        .filter(|&key| key.ends_with('A'))
-        .map(|key| key.clone())
+        .filter(|&key| key.ends_with('A')).cloned()
         .collect::<Vec<String>>();
 
     let mut steps = vec![0; start_nodes.len()];
