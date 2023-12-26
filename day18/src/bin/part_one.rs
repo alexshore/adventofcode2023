@@ -6,19 +6,19 @@ fn main() {
 }
 
 enum Direction {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST,
+    North,
+    East,
+    South,
+    West,
 }
 
 impl Direction {
     fn from(str_dir: &str) -> Self {
         match str_dir {
-            "U" => Direction::NORTH,
-            "R" => Direction::EAST,
-            "D" => Direction::SOUTH,
-            "L" => Direction::WEST,
+            "U" => Direction::North,
+            "R" => Direction::East,
+            "D" => Direction::South,
+            "L" => Direction::West,
             _ => unreachable!(),
         }
     }
@@ -49,26 +49,26 @@ fn parse_input(input: &str) -> Vec<Edge> {
         .collect()
 }
 
-fn calc_vertices(edges: &Vec<Edge>) -> Vec<Position> {
+fn calc_vertices(edges: &[Edge]) -> Vec<Position> {
     let mut res = vec![Position(0, 0)];
     for edge in edges {
         let last_pos = res.last().unwrap();
         res.push(match edge.direction {
-            Direction::NORTH => Position(last_pos.0, last_pos.1 + edge.distance as i32),
-            Direction::EAST => Position(last_pos.0 + edge.distance as i32, last_pos.1),
-            Direction::SOUTH => Position(last_pos.0, last_pos.1 - edge.distance as i32),
-            Direction::WEST => Position(last_pos.0 - edge.distance as i32, last_pos.1),
+            Direction::North => Position(last_pos.0, last_pos.1 + edge.distance as i32),
+            Direction::East => Position(last_pos.0 + edge.distance as i32, last_pos.1),
+            Direction::South => Position(last_pos.0, last_pos.1 - edge.distance as i32),
+            Direction::West => Position(last_pos.0 - edge.distance as i32, last_pos.1),
         })
     }
     res.reverse();
     res
 }
 
-fn calc_trench_length(edges: &Vec<Edge>) -> u32 {
-    edges.iter().map(|edge| edge.distance as u32).sum()
+fn calc_trench_length(edges: &[Edge]) -> u32 {
+    edges.iter().map(|edge| edge.distance).sum()
 }
 
-fn calc_area(vertices: &Vec<Position>) -> u32 {
+fn calc_area(vertices: &[Position]) -> u32 {
     let mut accumulation = 0;
 
     for window in vertices.windows(2) {
@@ -84,7 +84,7 @@ fn part_one(input: &str) -> u32 {
     let trench_length = calc_trench_length(&edges);
 
     let mut vertices = calc_vertices(&edges);
-    vertices.push(vertices[0].clone());
+    vertices.push(vertices[0]);
 
     trench_length + (calc_area(&vertices) - (trench_length / 2) + 1)
 }
