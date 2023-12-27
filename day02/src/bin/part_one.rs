@@ -1,11 +1,7 @@
-use std::collections::HashMap;
-
 fn main() {
     let input = include_str!("input.txt").trim_end();
     let _output = dbg!(part_one(input));
 }
-
-// code :3
 
 const MAX_RED: u32 = 12;
 const MAX_GREEN: u32 = 13;
@@ -18,6 +14,17 @@ enum Colour {
     Green,
 }
 
+impl Colour {
+    fn from_str(input: &str) -> Self {
+        match input {
+            "blue" => Self::Blue,
+            "red" => Self::Red,
+            "green" => Self::Green,
+            _ => unreachable!(),
+        }
+    }
+}
+
 #[derive(Debug)]
 struct Cube {
     quantity: u32,
@@ -25,18 +32,12 @@ struct Cube {
 }
 
 impl Cube {
-    fn parse(cube: String) -> Self {
-        let split_data: Vec<&str> = cube.split(' ').collect();
-
-        let colour_map = HashMap::from([
-            ("blue", Colour::Blue),
-            ("red", Colour::Red),
-            ("green", Colour::Green),
-        ]);
+    fn from_str(cube: &str) -> Self {
+        let (quantity, colour) = cube.split_once(' ').unwrap();
 
         Cube {
-            quantity: split_data.first().unwrap().parse::<u32>().unwrap(),
-            colour: colour_map[split_data.last().unwrap()],
+            quantity: quantity.parse::<u32>().expect("failed to from_str"),
+            colour: Colour::from_str(colour),
         }
     }
 }
@@ -47,11 +48,8 @@ struct Set {
 }
 
 impl Set {
-    fn parse(set: String) -> Self {
-        let cubes = set
-            .split(", ")
-            .map(|cube| Cube::parse(cube.to_owned()))
-            .collect();
+    fn from_str(set: &str) -> Self {
+        let cubes = set.split(", ").map(|cube| Cube::from_str(cube)).collect();
 
         Set { cubes }
     }
@@ -64,11 +62,8 @@ struct Game {
 }
 
 impl Game {
-    fn parse(game: String, id: u32) -> Self {
-        let sets = game
-            .split("; ")
-            .map(|set| Set::parse(set.to_owned()))
-            .collect();
+    fn from_str(game: &str, id: u32) -> Self {
+        let sets = game.split("; ").map(|set| Set::from_str(set)).collect();
 
         Game { sets, id }
     }
@@ -99,9 +94,9 @@ fn part_one(input: &str) -> u32 {
     let mut games: Vec<Game> = Vec::new();
 
     for (i, line) in input.split('\n').enumerate() {
-        let game = line.split(": ").collect::<Vec<_>>()[1];
+        let (_, game) = line.split_once(": ").unwrap();
         let id: u32 = i as u32 + 1;
-        games.push(Game::parse(game.to_owned(), id));
+        games.push(Game::from_str(game, id));
     }
 
     for game in games {
